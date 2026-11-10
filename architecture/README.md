@@ -33,6 +33,7 @@
 | Документ | Вопрос, на который отвечает |
 | --- | --- |
 | [`tech-stack.md`](/architecture/tech-stack.md) | Используемые компоненты и библиотеки; обоснование выбора |
+| [`agent-architecture.md`](/architecture/agent-architecture.md) | Устройство агентного цикла на LangGraph |
 
 ## Запланированные области развития
 
