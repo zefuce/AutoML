@@ -2,11 +2,11 @@
 
 ## 1. Цель
 
-Для разработки и тестирования системы, которая настраивает AutoML на основе пользовательского запроса и загруженных табличных данных, выбрано девять датасетов из разных предметных областей. Они охватывают бинарную и многоклассовую классификацию, регрессию, а также разные требования к подготовке данных, выбору метрик и валидации.
+Для разработки и тестирования системы, которая настраивает AutoML на основе пользовательского запроса и загруженных табличных данных, выбрано десять датасетов из разных предметных областей. Они охватывают бинарную и многоклассовую классификацию, регрессию, а также случаи, когда целевую переменную требуется сформировать или уточнить.
 
-Выбор сделан не только по типу ML-задачи. Датасеты содержат разные трудности, которые необходимо учитывать при формировании конфигурации AutoML: пропуски, дисбаланс классов, категориальные коды, утечки целевой переменной и зависимые наблюдения.
+Выбор сделан не только по типу ML-задачи. Датасеты позволяют исследовать дисбаланс классов, пропуски и специальные значения, связи нескольких таблиц, различия train/test, временные и групповые зависимости, а также риск утечки целевой переменной.
 
-Для каждого датасета подготовлены ноутбук с разведочным анализом данных (EDA) и Markdown-отчёт с проверками, выводами и ориентирами для будущего AutoML-агента. 
+Для каждого датасета подготовлены ноутбук с разведочным анализом данных (EDA) и Markdown-отчёт с результатами проверок, выводами и особенностями настройки AutoML.
 
 ## 2. Группы датасетов
 
@@ -14,62 +14,70 @@
 
 | Датасет | Таргет | Наблюдений | Обоснование выбора |
 |---|---|---:|---|
-| [Bank Marketing](bank_marketing/bank_marketing.md) | `y` | 45 211 | Дисбаланс классов, `unknown`, специальный код `pdays = -1`, утечка через `duration` при прогнозе до звонка |
-| [Default of Credit Card Clients](default_credit/default_credit.md) | `default payment next month` | 30 000 | История платежей, числовые коды категорий, неоднозначные статусы платежей и разная стоимость ошибок |
-| [APS Failure](aps_failure/aps_failure.md) | `class` | 60 000 | Редкие отказы, многочисленные пропуски, обезличенные признаки и заданная стоимость FP и FN |
-| [Online Shoppers Purchasing Intention](online_shoppers/online_shoppers.md) | `Revenue` | 12 330 | Дисбаланс, повторяющиеся записи, накопленные показатели сессии и риск утечки через `PageValues` |
+| [IEEE-CIS Fraud Detection](ieee_fraud_detection/EDA_ieee_fraud_detection.md) | `isFraud` | 590 540 | Редкие мошеннические операции, разреженные признаки, частичное покрытие `identity`, отличия схем train/test и временная структура |
+| [Bosch Production Line Performance](bosch_production_line_performance/EDA_bosch_production_line_performance.md) | `Response` | 1 183 747 | Редкий производственный брак, высокая размерность, структурные пропуски и измерения разных производственных станций |
+| [Home Credit Default Risk](home_credit_default_risk/EDA_home_credit_default_risk.md) | `TARGET` | 307 511 | Кредитный риск, специальные значения, многочисленные связанные таблицы, неполная история и ограничения доступности признаков |
+| [Olist Brazilian E-Commerce](olist_brazilian_ecommerce/EDA_olist_brazilian_ecommerce.md) | `late_delivery` (формируется из дат) | 96 470 с меткой | Прогноз просрочки доставки, создание целевой переменной, связи девяти таблиц, неоднозначные исходы и временная валидация |
+| [SM Lab / Спортмастер](sm_lab_sales_funnel/EDA_sm_lab_sales_funnel.md) | `add_to_cart_flag` / `create_order_flag` | 7 000 000 | Два этапа воронки, утечка через последующие действия, повторные пользователи и несовместимость полных и сокращённых версий |
+| [Т-Банк: Воронка авиабилетов](tbank_avia_funnel/EDA_tbank_avia_funnel.md) | Успешная покупка (по статусу сессии) | 38 561 сессия | Формирование исхода из событий экранов, редкие подтверждённые покупки, неоднозначные метки и зависимость сессий одного клиента |
 
 ### 2.2. Многоклассовая классификация
 
 | Датасет | Таргет | Наблюдений | Обоснование выбора |
 |---|---|---:|---|
-| [Predict Students' Dropout and Academic Success](student_dropout/student_dropout.md) | `Target` | 4 424 | Три исхода обучения, категориальные коды, доступность академических результатов первого и второго семестров |
-| [Diabetes 130-US Hospitals](diabetes/diabetes.md) | `readmitted` | 101 766 | Три класса, повторные госпитализации одних пациентов, пропуски `?`, признаки, доступные только к выписке |
+| [Airbnb New User Bookings](airbnb_new_user_bookings/EDA_airbnb_new_user_bookings.md) | `country_destination` | 213 451 | Двенадцать классов, преобладание `NDF`, специальные значения, утечка через `date_first_booking`, сдвиг train/test и ограничения журнала сессий |
 
 ### 2.3. Регрессия
 
 | Датасет | Таргет | Наблюдений | Обоснование выбора |
 |---|---|---:|---|
-| [Ames Housing](ames_housing/ames_housing.md) | `SalePrice` | 1 460 | Числовые и категориальные признаки, структурные пропуски, необычные сочетания площади и цены |
-| [Bike Sharing](bike_sharing/bike_sharing.md) | `cnt` | 17 379 | Почасовые наблюдения, отсутствующие часы, утечка через `casual` и `registered`, временное разбиение |
-| [Air Quality](air_quality/air_quality.md) | `CO(GT)` | 9 357 | Специальное обозначение пропусков `-200`, отсутствие части значений таргета, временная структура и сенсорные измерения |
+| [Avito Demand Prediction](avito_demand_prediction/EDA_avito_demand_prediction.md) | `deal_probability` | 1 503 424 | Числовая цель с преобладанием нулей, тексты, пропуски, аномалии цен и временные ограничения вспомогательных таблиц |
+| [Rossmann Store Sales](rossmann_store_sales/EDA_rossmann_store_sales.md) | `Sales` | 1 017 209 | Прогноз выручки, закрытые магазины, сезонность, структурные пропуски и утечка через фактический `Customers` |
 
-Такой состав позволяет проверять конфигурацию AutoML на задачах разного типа и сложности. Датасеты не объединяются в одну таблицу и не предполагают использования одной общей модели.
+### 2.4. Задача, требующая уточнения целевой переменной
+
+| Датасет | Возможная цель | Наблюдений | Обоснование выбора |
+|---|---|---:|---|
+| [Т-Банк: Коммуникации в Городе](tbank_gorod_communications/EDA_tbank_gorod_communications.md) | Факт или количество заказов выбранного сервиса (`orders_amt_*`) | 118 189 | Шесть счётчиков заказов вместо единого таргета, редкие события, нерегулярные наблюдения клиентов и неизвестный горизонт прогноза |
+
+Для Т-Банка «Коммуникации в Городе» бинарная классификация или регрессия определяется только после выбора сервиса и целевого исхода. Датасеты не объединяются между собой и не предполагают использования одной общей модели.
 
 ## 3. Какие возможности агента проверяются
 
 | Проверяемая особенность | Датасеты | Ожидаемое действие агента |
 |---|---|---|
-| Определение таргета и типа задачи | Все девять | Определить или уточнить целевую переменную; выбрать классификацию или регрессию |
-| Дисбаланс классов и стоимость ошибок | Bank Marketing, Default Credit, APS Failure, Online Shoppers | Не ориентироваться только на accuracy; согласовать метрику с задачей пользователя |
-| Пропуски и специальные значения | Bank Marketing, APS Failure, Ames Housing, Air Quality, Diabetes | Различать `NaN`, специальные коды и отсутствие объекта; выбирать обработку с учётом смысла признака |
-| Категориальные признаки с числовыми кодами | Default Credit, Student Dropout, Bike Sharing, Diabetes | Не принимать коды категорий за непрерывные измерения |
-| Утечка и доступность признаков | Bank Marketing, Bike Sharing, Online Shoppers, Student Dropout, Diabetes | Уточнять момент прогноза, предупреждать о недоступных признаках и исключать утечки |
-| Временные и групповые зависимости | Bike Sharing, Air Quality, Ames Housing, Diabetes | Учитывать время при разбиении; не разделять госпитализации одного пациента между обучением и проверкой |
-| Ошибки, выбросы и редкие значения | Все девять | Проверять предметный смысл необычных значений; не удалять строки только по формальному правилу IQR |
+| Определение и формирование таргета | Olist, SM Lab, Т-Банк Авиа, Т-Банк Город, остальные датасеты | Определить готовую цель, построить её из исходных полей или запросить уточнение; выбрать тип задачи |
+| Дисбаланс классов и стоимость ошибок | IEEE-CIS, Bosch, Home Credit, Olist, Airbnb, SM Lab, Т-Банк Авиа | Не ограничиваться accuracy; выбирать метрику с учётом постановки и редкости положительных исходов |
+| Пропуски и специальные значения | IEEE-CIS, Bosch, Home Credit, Avito, Airbnb, Olist, Т-Банк Авиа | Различать обычные пропуски, специальные коды, структурное отсутствие данных и неизвестные исходы |
+| Связи таблиц и уровень наблюдения | IEEE-CIS, Bosch, Home Credit, Avito, Olist, Airbnb, Т-Банк Авиа | Определять ключи и кратность связей; агрегировать события без размножения основных наблюдений |
+| Утечки и доступность признаков | Rossmann, Airbnb, SM Lab, Olist, Avito, Home Credit, Т-Банк Авиа, Т-Банк Город | Учитывать момент прогноза; исключать недоступные будущие события и признаки, раскрывающие ответ |
+| Временные и групповые зависимости | IEEE-CIS, Bosch, Rossmann, Avito, Airbnb, Olist, SM Lab, оба датасета Т-Банка | Выбирать временное или групповое разбиение в соответствии со сценарием применения модели |
+| Различия схем и выборок | IEEE-CIS, Home Credit, Rossmann, Avito, Airbnb, SM Lab | Проверять согласованность train/test или версий данных, не считать пересекающиеся выборки независимыми |
+| Аномалии и ограничения интерпретации | Все десять | Проверять необычные значения с учётом предметной области и не объявлять неподтверждённые причины доказанными |
 
-Это предварительные ориентиры, которые будут использоваться для оценки того, насколько корректно агент интерпретирует запрос и настраивает AutoML для конкретных данных.
+Эти результаты служат ориентирами для дальнейшего сравнения ручного анализа с конфигурациями, которые будет формировать AutoML-агент.
 
 ## 4. Структура и воспроизведение EDA
 
-Каждая папка содержит ноутбук `.ipynb`, отчёт `.md` и распакованные исходные данные, необходимые для запуска. Оригинальные ZIP-архивы в репозиторий не добавляются, чтобы не дублировать данные.
+Для каждого датасета предусмотрена отдельная папка с ноутбуком `.ipynb` и одноимённым отчётом `.md`. Исходные данные загружаются отдельно по ссылкам в отчётах и размещаются рядом с ноутбуком; большие архивы и исходные таблицы в репозиторий не включаются.
 
 | Папка | Ноутбук | Данные для запуска | Источник |
 |---|---|---|---|
-| `bank_marketing/` | [`bank_marketing.ipynb`](bank_marketing/bank_marketing.ipynb) | `bank-full.csv` | [UCI](https://archive.ics.uci.edu/dataset/222/bank+marketing) |
-| `default_credit/` | [`default_credit.ipynb`](default_credit/default_credit.ipynb) | `default of credit card clients.xls` | [UCI](https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients) |
-| `aps_failure/` | [`aps_failure.ipynb`](aps_failure/aps_failure.ipynb) | `aps_failure_training_set.csv`, `aps_failure_test_set.csv` | [UCI](https://archive.ics.uci.edu/dataset/421/aps+failure+at+scania+trucks) |
-| `ames_housing/` | [`ames_housing.ipynb`](ames_housing/ames_housing.ipynb) | `train.csv`, `data_description.txt` | [Kaggle](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data) |
-| `bike_sharing/` | [`bike_sharing.ipynb`](bike_sharing/bike_sharing.ipynb) | `hour.csv` | [UCI](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset) |
-| `student_dropout/` | [`student_dropout.ipynb`](student_dropout/student_dropout.ipynb) | `data.csv` | [UCI](https://archive.ics.uci.edu/dataset/697/predict+students+dropout+and+academic+success) |
-| `air_quality/` | [`air_quality.ipynb`](air_quality/air_quality.ipynb) | `AirQualityUCI.csv` | [UCI](https://archive.ics.uci.edu/dataset/360/air+quality) |
-| `online_shoppers/` | [`online_shoppers.ipynb`](online_shoppers/online_shoppers.ipynb) | `online_shoppers_intention.csv` | [UCI](https://archive.ics.uci.edu/dataset/468/online+shoppers+purchasing+intention+dataset) |
-| `diabetes/` | [`diabetes.ipynb`](diabetes/diabetes.ipynb) | `diabetic_data.csv`, `IDS_mapping.csv` | [UCI](https://archive.ics.uci.edu/dataset/296/diabetes+130-us+hospitals+for+years+1999-2008) |
+| `ieee_fraud_detection/` | [`EDA_ieee_fraud_detection.ipynb`](ieee_fraud_detection/EDA_ieee_fraud_detection.ipynb) | `ieee-fraud-detection.zip` | [Kaggle](https://www.kaggle.com/competitions/ieee-fraud-detection/data) |
+| `bosch_production_line_performance/` | [`EDA_bosch_production_line_performance.ipynb`](bosch_production_line_performance/EDA_bosch_production_line_performance.ipynb) | Шесть архивов `train_*.csv.zip` и `test_*.csv.zip` | [Kaggle](https://www.kaggle.com/competitions/bosch-production-line-performance/data) |
+| `home_credit_default_risk/` | [`EDA_home_credit_default_risk.ipynb`](home_credit_default_risk/EDA_home_credit_default_risk.ipynb) | Архивы с заявками и кредитными историями (`*.zip`) | [Kaggle](https://www.kaggle.com/competitions/home-credit-default-risk/data) |
+| `olist_brazilian_ecommerce/` | [`EDA_olist_brazilian_ecommerce.ipynb`](olist_brazilian_ecommerce/EDA_olist_brazilian_ecommerce.ipynb) | `archive.zip` (девять CSV) | [Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) |
+| `sm_lab_sales_funnel/` | [`EDA_sm_lab_sales_funnel.ipynb`](sm_lab_sales_funnel/EDA_sm_lab_sales_funnel.ipynb) | `SM Lab DATASET-20261119T095343Z-1-001.zip` | [DANO 2024](https://dano.hse.ru/data2024) |
+| `tbank_avia_funnel/` | [`EDA_tbank_avia_funnel.ipynb`](tbank_avia_funnel/EDA_tbank_avia_funnel.ipynb) | `dano_dataset_avia_hashed_corrected_s.xlsx` | DANO, предоставленный набор данных |
+| `airbnb_new_user_bookings/` | [`EDA_airbnb_new_user_bookings.ipynb`](airbnb_new_user_bookings/EDA_airbnb_new_user_bookings.ipynb) | Шесть архивов `*.csv.zip` | [Kaggle](https://www.kaggle.com/competitions/airbnb-recruiting-new-user-bookings/data) |
+| `avito_demand_prediction/` | [`EDA_avito_demand_prediction.ipynb`](avito_demand_prediction/EDA_avito_demand_prediction.ipynb) | `train.zip`, `test.zip`, `*_active.zip`, `periods_*.zip` | [Kaggle](https://www.kaggle.com/competitions/avito-demand-prediction/data) |
+| `rossmann_store_sales/` | [`EDA_rossmann_store_sales.ipynb`](rossmann_store_sales/EDA_rossmann_store_sales.ipynb) | `rossmann-store-sales.zip` | [Kaggle](https://www.kaggle.com/competitions/rossmann-store-sales/data) |
+| `tbank_gorod_communications/` | [`EDA_tbank_gorod_communications.ipynb`](tbank_gorod_communications/EDA_tbank_gorod_communications.ipynb) | `коммуникации по Городу.csv` | DANO, предоставленный набор данных |
 
-Для запуска необходимы Python, Jupyter, `pandas`, `numpy`, `matplotlib` и `seaborn`. Для чтения исходного XLS в Default Credit дополнительно используется `xlrd`.
+Для запуска используются Python, Jupyter, `pandas`, `numpy`, `matplotlib`; в отдельных ноутбуках также используется `seaborn`. Точный перечень исходных файлов и ссылки на них приведены в соответствующих `.md`.
 
-Ноутбуки выполняются сверху вниз в папке соответствующего датасета. Расчёты и графики сохраняются в `.ipynb`, а выводы по каждому исследованию приведены в одноимённом `.md`.
+Ноутбуки выполняются последовательно сверху вниз в папке датасета. Расчёты и графики находятся в `.ipynb`, а результаты исследования и выводы - в `.md`.
 
 ## 5. Результат этапа
 
-Для девяти датасетов определены целевые переменные, исходные типы задач, особенности данных, возможные утечки и ограничения применения признаков. Эти результаты составляют основу для дальнейшего сравнения ручного анализа с конфигурациями, которые будет формировать AutoML-агент по пользовательским запросам.
+Для десяти датасетов исследованы целевые переменные и возможные типы задач, качество и структура данных, зависимости наблюдений, различия выборок и риски утечек. Отдельно выделены случаи, когда до обучения необходимо сформировать метку, определить горизонт прогноза или подтвердить доступность признаков. Полученные результаты составляют основу для дальнейшего сравнения ручного анализа с конфигурациями AutoML-агента.
